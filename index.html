@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101d35">
+  <meta name="description" content="A concept prototype demonstrating customer-controlled Maison preferences for Les Maisons Club.">
+  <title>Les Maisons Club — A concept prototype</title>
+  <style>
+    :root {
+      --navy: #101d35;
+      --navy-soft: #1b2a43;
+      --ink: #182235;
+      --muted: #687080;
+      --gold: #b69a61;
+      --gold-light: #dfd0ad;
+      --paper: #f7f5f0;
+      --white: #fffefa;
+      --line: #e5e0d5;
+      --green: #2f604d;
+      --serif: Georgia, 'Times New Roman', serif;
+      --sans: 'Calibri', 'Helvetica Neue', Arial, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; color: var(--ink); background: var(--paper); font-family: var(--sans); }
+    button, input { font: inherit; }
+    .prototype-bar { background: #e9e3d6; color: #4d4638; text-align: center; padding: 9px 16px; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; }
+    .masthead { background: var(--navy); color: white; padding: 23px max(5vw, 24px) 0; }
+    .mast-row { display:flex; align-items:center; justify-content:space-between; max-width: 1240px; margin:auto; }
+    .brand { color: white; text-decoration:none; font: 20px var(--serif); letter-spacing:.07em; }
+    .brand small { display:block; margin-top:5px; color:var(--gold-light); font: 9px var(--sans); letter-spacing:.24em; text-transform:uppercase; }
+    .nav-label { color:#c7ccd5; font-size:11px; letter-spacing:.16em; text-transform:uppercase; }
+    .hero { max-width:1240px; margin:0 auto; padding:62px 0 50px; display:grid; grid-template-columns:minmax(0,1.4fr) minmax(250px,.6fr); gap:60px; align-items:end; }
+    .eyebrow { color:var(--gold-light); font-size:11px; letter-spacing:.21em; text-transform:uppercase; margin:0 0 17px; }
+    h1 { max-width:760px; margin:0; color:#fffefa; font: clamp(38px,5vw,66px)/1.03 var(--serif); font-weight:400; letter-spacing:-.025em; }
+    .hero-copy { color:#d5d8dd; font-size:16px; line-height:1.65; max-width:670px; margin:19px 0 0; }
+    .hero-aside { border-left:1px solid rgba(223,208,173,.45); padding:5px 0 5px 24px; color:#d5d8dd; font-size:13px; line-height:1.65; }
+    .hero-aside strong { display:block; color:var(--gold-light); font:17px var(--serif); font-weight:400; margin-bottom:8px; }
+    main { max-width:1240px; margin:0 auto; padding:42px max(5vw,24px) 70px; }
+    .section-head { display:flex; justify-content:space-between; align-items:end; gap:20px; margin-bottom:20px; }
+    .section-kicker { color:#817452; font-size:10px; letter-spacing:.19em; text-transform:uppercase; margin:0 0 8px; }
+    h2 { font:30px/1.15 var(--serif); font-weight:400; margin:0; color:var(--navy); }
+    .hint { color:var(--muted); font-size:13px; margin:0 0 2px; }
+    .workspace { display:grid; grid-template-columns:minmax(0,1.08fr) minmax(340px,.92fr); border:1px solid var(--line); background:var(--white); }
+    .preferences { padding:30px 34px 27px; }
+    .pref-intro { margin:0 0 20px; color:var(--muted); font-size:13px; line-height:1.55; }
+    .maison-row { min-height:83px; display:grid; grid-template-columns:47px minmax(0,1fr) auto; align-items:center; gap:14px; border-top:1px solid var(--line); }
+    .seal { width:42px; height:42px; display:grid; place-items:center; border:1px solid #d8c9a6; color:var(--navy); font:15px var(--serif); border-radius:50%; }
+    .maison-name { font:18px var(--serif); color:var(--navy); }
+    .maison-category { margin-top:4px; color:var(--muted); font-size:11px; letter-spacing:.08em; text-transform:uppercase; }
+    .switch-wrap { display:flex; align-items:center; gap:10px; }
+    .switch-text { width:29px; color:var(--muted); font-size:10px; text-transform:uppercase; letter-spacing:.1em; }
+    .switch { position:relative; display:inline-flex; width:46px; height:26px; }
+    .switch input { position:absolute; width:1px; height:1px; opacity:0; }
+    .track { position:absolute; inset:0; border-radius:20px; background:#c8cbd0; cursor:pointer; transition:background .2s ease; }
+    .track::before { content:''; position:absolute; width:18px; height:18px; top:4px; left:4px; background:white; border-radius:50%; box-shadow:0 1px 3px #0003; transition:transform .2s ease; }
+    .switch input:checked + .track { background:var(--green); }
+    .switch input:checked + .track::before { transform:translateX(20px); }
+    .switch input:focus-visible + .track { outline:3px solid #b69a61; outline-offset:3px; }
+    .consent-note { border-top:1px solid var(--line); padding-top:17px; margin-top:7px; display:flex; gap:10px; color:var(--muted); font-size:12px; line-height:1.55; }
+    .consent-note span { color:var(--green); font-size:17px; line-height:1; }
+    .recommendations { background:#f1eee7; border-left:1px solid var(--line); padding:30px 30px 27px; }
+    .recommendation-title { display:flex; justify-content:space-between; gap:16px; align-items:center; margin-bottom:5px; }
+    .recommendation-title h3 { font:23px var(--serif); font-weight:400; color:var(--navy); margin:0; }
+    .live-label { color:#607064; font-size:10px; letter-spacing:.13em; text-transform:uppercase; white-space:nowrap; }
+    .rec-subtitle { color:var(--muted); font-size:12px; line-height:1.5; margin:7px 0 17px; }
+    .rec-list { display:grid; gap:10px; }
+    .rec-card { background:var(--white); border:1px solid #e6e0d5; padding:15px 16px; display:grid; grid-template-columns:34px minmax(0,1fr); gap:13px; align-items:start; animation:appear .22s ease both; }
+    .rec-mark { width:32px; height:32px; border:1px solid #d8c9a6; border-radius:50%; display:grid; place-items:center; color:#816d40; font:13px var(--serif); }
+    .rec-brand { color:#817452; font-size:9px; letter-spacing:.17em; text-transform:uppercase; margin-bottom:4px; }
+    .rec-name { color:var(--navy); font:17px var(--serif); }
+    .rec-desc { color:#6d7380; font-size:11px; line-height:1.45; margin-top:4px; }
+    .rec-empty { border:1px dashed #c8c1b4; padding:23px 20px; color:var(--muted); font-size:13px; line-height:1.6; background:#faf8f3; }
+    .summary { margin-top:18px; padding-top:15px; border-top:1px solid #d9d2c5; }
+    .summary-label { color:#817452; font-size:9px; letter-spacing:.16em; text-transform:uppercase; }
+    .summary-text { color:var(--navy); font:16px var(--serif); margin-top:6px; }
+    .principles { margin-top:56px; border-top:1px solid var(--line); padding-top:30px; display:grid; grid-template-columns:.75fr 1.25fr; gap:50px; }
+    .principles h2 { font-size:27px; }
+    .principle-list { display:grid; grid-template-columns:repeat(3,1fr); gap:22px; }
+    .principle { border-top:2px solid var(--gold); padding-top:12px; }
+    .principle strong { color:var(--navy); font:17px var(--serif); font-weight:400; }
+    .principle p { color:var(--muted); font-size:12px; line-height:1.55; margin:7px 0 0; }
+    footer { background:var(--navy); color:#c7ccd5; padding:20px max(5vw,24px); font-size:11px; line-height:1.6; }
+    .footer-inner { max-width:1240px; margin:auto; display:flex; justify-content:space-between; gap:25px; }
+    footer strong { color:var(--gold-light); font-weight:400; }
+    @keyframes appear { from { opacity:0; transform:translateY(5px); } to { opacity:1; transform:translateY(0); } }
+    @media (max-width:800px) {
+      .hero { grid-template-columns:1fr; gap:28px; padding-top:48px; }
+      .hero-aside { max-width:520px; }
+      .workspace { grid-template-columns:1fr; }
+      .recommendations { border-left:0; border-top:1px solid var(--line); }
+      .principles { grid-template-columns:1fr; gap:25px; }
+    }
+    @media (max-width:520px) {
+      .masthead { padding-top:18px; }
+      .nav-label { display:none; }
+      .hero { padding-bottom:38px; }
+      main { padding-top:32px; }
+      .section-head { align-items:start; flex-direction:column; gap:7px; }
+      .preferences,.recommendations { padding:23px 19px; }
+      .maison-row { grid-template-columns:40px minmax(0,1fr) auto; gap:10px; }
+      .seal { width:36px; height:36px; }
+      .maison-name { font-size:16px; }
+      .switch-wrap { gap:5px; }
+      .principle-list { grid-template-columns:1fr; gap:17px; }
+      .footer-inner { flex-direction:column; gap:8px; }
+    }
+    @media (prefers-reduced-motion: reduce) { *,*::before,*::after { animation-duration:.01ms !important; transition-duration:.01ms !important; } }
+  </style>
+</head>
+<body>
+  <div class="prototype-bar">Independent concept prototype · Not an official LVMH or Maison product</div>
+  <header class="masthead">
+    <div class="mast-row">
+      <a class="brand" href="#top" aria-label="Les Maisons Club home">LES MAISONS CLUB<small>A considered way to discover</small></a>
+      <div class="nav-label">A customer-controlled concept</div>
+    </div>
+    <div class="hero" id="top">
+      <div>
+        <p class="eyebrow">One experience · Your choice</p>
+        <h1>Discover across Maisons, on your terms.</h1>
+        <p class="hero-copy">A single place to explore participating Maisons, with recommendations shaped only by the categories you choose to include.</p>
+      </div>
+      <aside class="hero-aside"><strong>Your preferences stay in your hands.</strong>Choose which Maisons may appear in your discovery experience. Change your selection whenever you like.</aside>
+    </div>
+  </header>
+  <main>
+    <section aria-labelledby="choose-heading">
+      <div class="section-head">
+        <div><p class="section-kicker">The preference control</p><h2 id="choose-heading">Choose what you’d like to discover</h2></div>
+        <p class="hint">Switch a Maison on or off to see the experience change.</p>
+      </div>
+      <div class="workspace">
+        <div class="preferences">
+          <p class="pref-intro">Only selected Maisons can contribute to the recommendations shown here. These choices are local to this demo.</p>
+          <div id="maison-list">
+            <div class="maison-row">
+              <div class="seal" aria-hidden="true">D</div><div><div class="maison-name">Dior</div><div class="maison-category">Fashion &amp; leather goods</div></div>
+              <div class="switch-wrap"><span class="switch-text" id="label-dior">On</span><label class="switch"><input type="checkbox" data-maison="Dior" data-key="dior" checked aria-label="Include Dior recommendations"><span class="track"></span></label></div>
+            </div>
+            <div class="maison-row">
+              <div class="seal" aria-hidden="true">B</div><div><div class="maison-name">Bulgari</div><div class="maison-category">Watches &amp; jewellery</div></div>
+              <div class="switch-wrap"><span class="switch-text" id="label-bulgari">On</span><label class="switch"><input type="checkbox" data-maison="Bulgari" data-key="bulgari" checked aria-label="Include Bulgari recommendations"><span class="track"></span></label></div>
+            </div>
+            <div class="maison-row">
+              <div class="seal" aria-hidden="true">G</div><div><div class="maison-name">Guerlain</div><div class="maison-category">Beauty</div></div>
+              <div class="switch-wrap"><span class="switch-text" id="label-guerlain">On</span><label class="switch"><input type="checkbox" data-maison="Guerlain" data-key="guerlain" checked aria-label="Include Guerlain recommendations"><span class="track"></span></label></div>
+            </div>
+            <div class="maison-row">
+              <div class="seal" aria-hidden="true">H</div><div><div class="maison-name">Hennessy</div><div class="maison-category">Wines &amp; spirits</div></div>
+              <div class="switch-wrap"><span class="switch-text" id="label-hennessy">Off</span><label class="switch"><input type="checkbox" data-maison="Hennessy" data-key="hennessy" aria-label="Include Hennessy recommendations"><span class="track"></span></label></div>
+            </div>
+          </div>
+          <div class="consent-note"><span aria-hidden="true">✓</span><div><strong>Choice by Maison.</strong> Each switch represents a separate choice. A participating Maison’s identity and relationship with its customers remain distinct within this concept.</div></div>
+        </div>
+        <aside class="recommendations" aria-live="polite" aria-atomic="true">
+          <div class="recommendation-title"><h3>Selected for you</h3><span class="live-label">● Updates live</span></div>
+          <p class="rec-subtitle" id="rec-subtitle">A sample view using only the Maisons you’ve selected.</p>
+          <div class="rec-list" id="rec-list"></div>
+          <div class="summary"><div class="summary-label">Your selected preferences</div><div class="summary-text" id="summary-text"></div></div>
+        </aside>
+      </div>
+    </section>
+    <section class="principles" aria-labelledby="principles-heading">
+      <div><p class="section-kicker">Designed around trust</p><h2 id="principles-heading">A shared experience with clear boundaries</h2></div>
+      <div class="principle-list">
+        <div class="principle"><strong>Opt in, Maison by Maison</strong><p>Customers decide which participating Maisons can appear in their discovery feed.</p></div>
+        <div class="principle"><strong>Recommendations follow choice</strong><p>Selected preferences shape what is shown; switching a Maison off removes its examples.</p></div>
+        <div class="principle"><strong>Distinct identities</strong><p>Participation would respect each Maison’s autonomy, voice and customer relationship.</p></div>
+      </div>
+    </section>
+  </main>
+  <footer><div class="footer-inner"><div><strong>Les Maisons Club · Concept prototype</strong><br>Illustrative interface for discussion purposes only.</div><div>No actual AI, backend, customer data or Maison affiliation is used in this demo.</div></div></footer>
+  <script>
+    // Static, illustrative content only. All preference changes stay in this page.
+    const examples = {
+      dior: { maison: 'Dior', mark: 'D', items: [ ['A considered wardrobe edit', 'A sample fashion discovery, tailored to the selected Maison.'], ['Objects with a point of view', 'A second illustrative way to explore design and craftsmanship.'] ] },
+      bulgari: { maison: 'Bulgari', mark: 'B', items: [ ['The art of a lasting detail', 'A sample jewellery discovery, included because this Maison is selected.'], ['A study in colour and form', 'An illustrative edit exploring shape, material and expression.'] ] },
+      guerlain: { maison: 'Guerlain', mark: 'G', items: [ ['A ritual, made personal', 'A sample beauty discovery inspired by the idea of a daily ritual.'], ['Notes to explore', 'An illustrative fragrance discovery within your selected preferences.'] ] },
+      hennessy: { maison: 'Hennessy', mark: 'H', items: [ ['A moment to savour', 'An illustrative discovery from the selected wines and spirits category.'], ['Craft, shared slowly', 'A sample editorial story about craft and occasion.'] ] }
+    };
+    const switches = [...document.querySelectorAll('input[data-maison]')];
+    const recList = document.getElementById('rec-list');
+    const summary = document.getElementById('summary-text');
+    const subtitle = document.getElementById('rec-subtitle');
+    function updateDemo() {
+      const selected = switches.filter(input => input.checked);
+      const names = selected.map(input => input.dataset.maison);
+      switches.forEach(input => {
+        const label = document.getElementById(`label-${input.dataset.key}`);
+        label.textContent = input.checked ? 'On' : 'Off';
+      });
+      summary.textContent = names.length ? names.join(' · ') : 'No Maisons selected';
+      recList.replaceChildren();
+      if (!selected.length) {
+        subtitle.textContent = 'Your feed is paused until you choose a Maison.';
+        const empty = document.createElement('div');
+        empty.className = 'rec-empty';
+        empty.textContent = 'Nothing is shown while every Maison is switched off. Turn on any Maison to see its sample discoveries here.';
+        recList.append(empty);
+        return;
+      }
+      subtitle.textContent = `Showing illustrative discoveries from ${names.join(', ')} only.`;
+      selected.forEach(input => {
+        const maison = examples[input.dataset.key];
+        const item = maison.items[0];
+        const card = document.createElement('div');
+        card.className = 'rec-card';
+        card.innerHTML = `<div class="rec-mark" aria-hidden="true">${maison.mark}</div><div><div class="rec-brand">${maison.maison} · Sample discovery</div><div class="rec-name">${item[0]}</div><div class="rec-desc">${item[1]}</div></div>`;
+        recList.append(card);
+      });
+    }
+    switches.forEach(input => input.addEventListener('change', updateDemo));
+    updateDemo();
+  </script>
+</body>
+</html>
