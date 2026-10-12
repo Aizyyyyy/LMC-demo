@@ -65,8 +65,9 @@
     .live-label { color:#607064; font-size:10px; letter-spacing:.13em; text-transform:uppercase; white-space:nowrap; }
     .rec-subtitle { color:var(--muted); font-size:12px; line-height:1.5; margin:7px 0 17px; }
     .rec-list { display:grid; gap:10px; }
-    .rec-card { background:var(--white); border:1px solid #e6e0d5; padding:15px 16px; display:grid; grid-template-columns:34px minmax(0,1fr); gap:13px; align-items:start; animation:appear .22s ease both; }
-    .rec-mark { width:32px; height:32px; border:1px solid #d8c9a6; border-radius:50%; display:grid; place-items:center; color:#816d40; font:13px var(--serif); }
+    .rec-card { background:var(--white); border:1px solid #e6e0d5; padding:12px; display:grid; grid-template-columns:96px minmax(0,1fr); gap:15px; align-items:center; animation:appear .22s ease both; }
+    .product-photo { width:96px; height:108px; object-fit:cover; background:#eae5da; display:block; }
+    .photo-placeholder { width:96px; height:108px; display:grid; place-items:center; background:#eae5da; color:#816d40; font:24px var(--serif); }
     .rec-brand { color:#817452; font-size:9px; letter-spacing:.17em; text-transform:uppercase; margin-bottom:4px; }
     .rec-name { color:var(--navy); font:17px var(--serif); }
     .rec-desc { color:#6d7380; font-size:11px; line-height:1.45; margin-top:4px; }
@@ -132,30 +133,13 @@
       </div>
       <div class="workspace">
         <div class="preferences">
-          <p class="pref-intro">Only selected Maisons can contribute to the recommendations shown here. These choices are local to this demo.</p>
-          <div id="maison-list">
-            <div class="maison-row">
-              <div class="seal" aria-hidden="true">D</div><div><div class="maison-name">Dior</div><div class="maison-category">Fashion &amp; leather goods</div></div>
-              <div class="switch-wrap"><span class="switch-text" id="label-dior">On</span><label class="switch"><input type="checkbox" data-maison="Dior" data-key="dior" checked aria-label="Include Dior recommendations"><span class="track"></span></label></div>
-            </div>
-            <div class="maison-row">
-              <div class="seal" aria-hidden="true">B</div><div><div class="maison-name">Bulgari</div><div class="maison-category">Watches &amp; jewellery</div></div>
-              <div class="switch-wrap"><span class="switch-text" id="label-bulgari">On</span><label class="switch"><input type="checkbox" data-maison="Bulgari" data-key="bulgari" checked aria-label="Include Bulgari recommendations"><span class="track"></span></label></div>
-            </div>
-            <div class="maison-row">
-              <div class="seal" aria-hidden="true">G</div><div><div class="maison-name">Guerlain</div><div class="maison-category">Beauty</div></div>
-              <div class="switch-wrap"><span class="switch-text" id="label-guerlain">On</span><label class="switch"><input type="checkbox" data-maison="Guerlain" data-key="guerlain" checked aria-label="Include Guerlain recommendations"><span class="track"></span></label></div>
-            </div>
-            <div class="maison-row">
-              <div class="seal" aria-hidden="true">H</div><div><div class="maison-name">Hennessy</div><div class="maison-category">Wines &amp; spirits</div></div>
-              <div class="switch-wrap"><span class="switch-text" id="label-hennessy">Off</span><label class="switch"><input type="checkbox" data-maison="Hennessy" data-key="hennessy" aria-label="Include Hennessy recommendations"><span class="track"></span></label></div>
-            </div>
-          </div>
+          <p class="pref-intro">Only the products listed for selected Maisons appear here. These choices are local to this demo.</p>
+          <div id="maison-list"></div>
           <div class="consent-note"><span aria-hidden="true">✓</span><div><strong>Choice by Maison.</strong> Each switch represents a separate choice. A participating Maison’s identity and relationship with its customers remain distinct within this concept.</div></div>
         </div>
         <aside class="recommendations" aria-live="polite" aria-atomic="true">
-          <div class="recommendation-title"><h3>Selected for you</h3><span class="live-label">● Updates live</span></div>
-          <p class="rec-subtitle" id="rec-subtitle">A sample view using only the Maisons you’ve selected.</p>
+          <div class="recommendation-title"><h3>Featured products</h3><span class="live-label">● Updates live</span></div>
+          <p class="rec-subtitle" id="rec-subtitle">Products from the Maisons you’ve selected.</p>
           <div class="rec-list" id="rec-list"></div>
           <div class="summary"><div class="summary-label">Your selected preferences</div><div class="summary-text" id="summary-text"></div></div>
         </aside>
@@ -172,46 +156,129 @@
   </main>
   <footer><div class="footer-inner"><div><strong>Les Maisons Club · Concept prototype</strong><br>Illustrative interface for discussion purposes only.</div><div>No actual AI, backend, customer data or Maison affiliation is used in this demo.</div></div></footer>
   <script>
-    // Static, illustrative content only. All preference changes stay in this page.
-    const examples = {
-      dior: { maison: 'Dior', mark: 'D', items: [ ['A considered wardrobe edit', 'A sample fashion discovery, tailored to the selected Maison.'], ['Objects with a point of view', 'A second illustrative way to explore design and craftsmanship.'] ] },
-      bulgari: { maison: 'Bulgari', mark: 'B', items: [ ['The art of a lasting detail', 'A sample jewellery discovery, included because this Maison is selected.'], ['A study in colour and form', 'An illustrative edit exploring shape, material and expression.'] ] },
-      guerlain: { maison: 'Guerlain', mark: 'G', items: [ ['A ritual, made personal', 'A sample beauty discovery inspired by the idea of a daily ritual.'], ['Notes to explore', 'An illustrative fragrance discovery within your selected preferences.'] ] },
-      hennessy: { maison: 'Hennessy', mark: 'H', items: [ ['A moment to savour', 'An illustrative discovery from the selected wines and spirits category.'], ['Craft, shared slowly', 'A sample editorial story about craft and occasion.'] ] }
-    };
-    const switches = [...document.querySelectorAll('input[data-maison]')];
+    // ================================================================
+    // EASY EDIT: MAISON AND PRODUCT LIST
+    // Edit the names, descriptions, and image paths in this section.
+    // Add a product by copying a { title, description, image } entry.
+    // Add a Maison by copying one complete Maison entry in the list.
+    // Put photos in the site's images folder and use paths like:
+    // image: 'images/lheure-bleue.jpg'
+    // Leave image: '' if you do not want a photo.
+    // ================================================================
+    const maisons = [
+      {
+        key: 'dior', name: 'Dior', category: 'Fashion & leather goods', mark: 'D', selected: true,
+        products: [
+          { title: 'A considered wardrobe edit', description: 'Replace this with a real product name and a short description.', image: '' }
+        ]
+      },
+      {
+        key: 'bulgari', name: 'Bulgari', category: 'Watches & jewellery', mark: 'B', selected: true,
+        products: [
+          { title: 'The art of a lasting detail', description: 'Replace this with a real product name and a short description.', image: '' }
+        ]
+      },
+      {
+        key: 'guerlain', name: 'Guerlain', category: 'Beauty', mark: 'G', selected: true,
+        products: [
+          { title: 'L’Heure Bleue', description: 'Add a short product description here.', image: '' }
+        ]
+      },
+      {
+        key: 'hennessy', name: 'Hennessy', category: 'Wines & spirits', mark: 'H', selected: false,
+        products: [
+          { title: 'A moment to savour', description: 'Replace this with a real product name and a short description.', image: '' }
+        ]
+      }
+    ];
+
+    const maisonList = document.getElementById('maison-list');
     const recList = document.getElementById('rec-list');
     const summary = document.getElementById('summary-text');
     const subtitle = document.getElementById('rec-subtitle');
-    function updateDemo() {
-      const selected = switches.filter(input => input.checked);
-      const names = selected.map(input => input.dataset.maison);
-      switches.forEach(input => {
-        const label = document.getElementById(`label-${input.dataset.key}`);
-        label.textContent = input.checked ? 'On' : 'Off';
+    const switches = [];
+
+    function makeElement(tag, className, text) {
+      const element = document.createElement(tag);
+      if (className) element.className = className;
+      if (text !== undefined) element.textContent = text;
+      return element;
+    }
+
+    function buildMaisonControls() {
+      maisons.forEach(maison => {
+        const row = makeElement('div', 'maison-row');
+        row.append(makeElement('div', 'seal', maison.mark));
+        const details = makeElement('div');
+        details.append(makeElement('div', 'maison-name', maison.name));
+        details.append(makeElement('div', 'maison-category', maison.category));
+        row.append(details);
+
+        const switchWrap = makeElement('div', 'switch-wrap');
+        const state = makeElement('span', 'switch-text', maison.selected ? 'On' : 'Off');
+        const label = makeElement('label', 'switch');
+        const input = document.createElement('input');
+        input.type = 'checkbox';
+        input.checked = maison.selected;
+        input.setAttribute('aria-label', `Include ${maison.name} products`);
+        input.addEventListener('change', () => {
+          maison.selected = input.checked;
+          state.textContent = input.checked ? 'On' : 'Off';
+          updateProducts();
+        });
+        const track = makeElement('span', 'track');
+        label.append(input, track);
+        switchWrap.append(state, label);
+        row.append(switchWrap);
+        maisonList.append(row);
+        switches.push({ maison, input });
       });
-      summary.textContent = names.length ? names.join(' · ') : 'No Maisons selected';
+    }
+
+    function makeProductCard(maison, product) {
+      const card = makeElement('article', 'rec-card');
+      if (product.image) {
+        const image = document.createElement('img');
+        image.className = 'product-photo';
+        image.src = product.image;
+        image.alt = product.title;
+        image.loading = 'lazy';
+        image.addEventListener('error', () => {
+          const placeholder = makeElement('div', 'photo-placeholder', maison.mark);
+          placeholder.setAttribute('aria-label', `No image found for ${product.title}`);
+          image.replaceWith(placeholder);
+        }, { once: true });
+        card.append(image);
+      } else {
+        const placeholder = makeElement('div', 'photo-placeholder', maison.mark);
+        placeholder.setAttribute('aria-label', `No image added for ${product.title}`);
+        card.append(placeholder);
+      }
+      const info = makeElement('div');
+      info.append(makeElement('div', 'rec-brand', maison.name));
+      info.append(makeElement('div', 'rec-name', product.title));
+      info.append(makeElement('div', 'rec-desc', product.description));
+      card.append(info);
+      return card;
+    }
+
+    function updateProducts() {
+      const selected = switches.filter(item => item.input.checked).map(item => item.maison);
+      summary.textContent = selected.length ? selected.map(maison => maison.name).join(' · ') : 'No Maisons selected';
       recList.replaceChildren();
       if (!selected.length) {
-        subtitle.textContent = 'Your feed is paused until you choose a Maison.';
-        const empty = document.createElement('div');
-        empty.className = 'rec-empty';
-        empty.textContent = 'Nothing is shown while every Maison is switched off. Turn on any Maison to see its sample discoveries here.';
+        subtitle.textContent = 'Your product list is paused until you choose a Maison.';
+        const empty = makeElement('div', 'rec-empty', 'Nothing is shown while every Maison is switched off. Turn on a Maison to see its products here.');
         recList.append(empty);
         return;
       }
-      subtitle.textContent = `Showing illustrative discoveries from ${names.join(', ')} only.`;
-      selected.forEach(input => {
-        const maison = examples[input.dataset.key];
-        const item = maison.items[0];
-        const card = document.createElement('div');
-        card.className = 'rec-card';
-        card.innerHTML = `<div class="rec-mark" aria-hidden="true">${maison.mark}</div><div><div class="rec-brand">${maison.maison} · Sample discovery</div><div class="rec-name">${item[0]}</div><div class="rec-desc">${item[1]}</div></div>`;
-        recList.append(card);
-      });
+      const productCount = selected.reduce((total, maison) => total + maison.products.length, 0);
+      subtitle.textContent = `Showing ${productCount} ${productCount === 1 ? 'product' : 'products'} from your selected Maisons only.`;
+      selected.forEach(maison => maison.products.forEach(product => recList.append(makeProductCard(maison, product))));
     }
-    switches.forEach(input => input.addEventListener('change', updateDemo));
-    updateDemo();
+
+    buildMaisonControls();
+    updateProducts();
   </script>
 </body>
 </html>
