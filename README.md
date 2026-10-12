@@ -1,6 +1,6 @@
 # Les Maisons Club — concept prototype
 
-A self-contained interactive web demo for presenting Ani’s independent LMC concept. It demonstrates Maison-by-Maison preferences and updates the sample discovery feed when a switch changes.
+A self-contained interactive web demo for presenting my independent LMC concept. It demonstrates Maison-by-Maison preferences and updates the sample discovery feed when a switch changes.
 
 ## Run it
 
